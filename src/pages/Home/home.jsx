@@ -9,16 +9,20 @@ import {
   Text,
   Icon,
 } from '@chakra-ui/react';
-import { ColorModeSwitcher } from '../../ColorModeSwitcher';
-const KuttyHero = () => {
+import Navbar from '../../components/navbar';
+import Features from '../../components/features';
+import Testimonial from '../../components/testimonial';
+// import Footer from '@pages/Home/home';
+import Footer from '../../components/footer';
+const Home = () => {
   return (
-    <Box px={8} py={24} mx="auto">
+    <Box px={8} py={5} mx="auto" pb={20}>
+      <Navbar />
       <Box
         w={{ base: 'full', md: 11 / 12, xl: 9 / 12 }}
         mx="auto"
         textAlign={{ base: 'left', md: 'center' }}
       >
-        {/* <ColorModeSwitcher /> */}
         <chakra.h1
           mb={6}
           fontSize={{ base: '4xl', md: '6xl' }}
@@ -90,7 +94,7 @@ const KuttyHero = () => {
           src="https://kutty.netlify.app/hero.jpg"
           alt="Hellonext feedback boards software screenshot"
         />
-        <Button
+        {/* <Button
           as="a"
           target="_blank"
           href="https://github.com/starwiz-7"
@@ -105,10 +109,13 @@ const KuttyHero = () => {
           _hover={{ background: 'white' }}
         >
           Made with ❤ by Aryan
-        </Button>
+        </Button> */}
       </Box>
+      <Features />
+      <Testimonial />
+      <Footer />
     </Box>
   );
 };
 
-export default KuttyHero;
+export default Home;
