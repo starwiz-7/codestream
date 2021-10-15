@@ -5,10 +5,11 @@ import {
   Stack,
   useColorModeValue,
   useDisclosure,
+  Button,
 } from '@chakra-ui/react';
 
 import { ColorModeSwitcher } from '../ColorModeSwitcher';
-export default function WithSubnavigation() {
+export default function WithSubnavigation({ screen }) {
   return (
     <Box>
       <Flex
@@ -38,6 +39,7 @@ export default function WithSubnavigation() {
           direction={'row'}
           spacing={6}
         >
+          {screen !== null ? <Button>Share</Button> : <></>}
           <ColorModeSwitcher />
         </Stack>
       </Flex>
