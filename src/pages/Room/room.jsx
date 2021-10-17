@@ -18,9 +18,12 @@ import {
   Text,
   useToast,
   IconButton,
+  chakra,
 } from '@chakra-ui/react';
+import { createLocalStorageStateHook } from 'use-local-storage-state';
 import Navbar from '../../components/navbar';
 import RandomColor from 'randomcolor';
+import { useParams } from 'react-router-dom';
 import {
   VscChevronRight,
   VscFolderOpened,
@@ -28,16 +31,28 @@ import {
   VscRepoPull,
 } from 'react-icons/vsc';
 import './room.css';
+import language from './languages.json';
 //Editor and collab import
 import './editor';
 import { CodemirrorBinding } from 'y-codemirror';
 import * as Y from 'yjs';
 import { WebrtcProvider } from 'y-webrtc';
 import { UnControlled as Editor } from 'react-codemirror2';
+import User from '../../components/user';
+import { socket } from '../../socket';
 
-const language = ['cpp', 'java', 'javascript', 'python', 'haskell'];
-export default function App() {
+const getName = () => {
+  return 'Anonymous shark';
+};
+
+const useStorage = createLocalStorageStateHook('name');
+export default function App(props) {
   const [darkMode, setDarkMode] = useState('darkMode', () => false);
+  const [lang, setLang] = useState('plaintext');
+  const [name, setName] = useStorage('name', getName);
+  const [users, setUsers] = useState();
+  const { slug } = useParams();
+  const toast = useToast();
   function handleDarkMode() {
     setDarkMode(!darkMode);
   }
@@ -50,8 +65,51 @@ export default function App() {
     window.editor = editor;
     setEditorInstance(editor);
   };
+  const prepareData = slug => {
+    return {
+      name: name,
+      color: 'green',
+      roomId: slug,
+    };
+  };
   React.useEffect(() => {
-    // codeeditor.setSize("100%", "100%");
+    console.log(slug);
+    socket.emit('join-room', prepareData(slug));
+    socket.on('emit-language-changed', lang => {
+      console.error('langggg-changes');
+      setLang(lang);
+      toast({
+        title: `${lang} changed`,
+        description: 'User changed the language',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
+    });
+    socket.on('on-join', (userMap, arg) => {
+      setUsers(userMap);
+      console.error(userMap);
+      toast({
+        title: `${arg}`,
+        description: 'User changed the language',
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+        position: 'bottom-right',
+      });
+    });
+    socket.on('user-left', userMap => {
+      setUsers(userMap);
+    });
+  }, []);
+
+  const handleChangeLanguage = lang => {
+    setLang(lang);
+    console.error('handle-lang');
+    socket.emit('language-changed', lang);
+  };
+  React.useEffect(() => {
     if (editorInstance) {
       const ydoc = new Y.Doc(); //create a ydoc
 
@@ -76,7 +134,7 @@ export default function App() {
         const color = RandomColor(); //Provied any random color to be used for each user
 
         awareness.setLocalStateField('user', {
-          name: 'Users Name',
+          name: name,
           color: color,
         });
 
@@ -106,16 +164,6 @@ export default function App() {
       bgColor={darkMode ? '#1e1e1e' : 'white'}
       color={darkMode ? '#cbcaca' : 'inherit'}
     >
-      {/* <Box
-        flexShrink={0}
-        bgColor={darkMode ? '#333333' : '#e8e8e8'}
-        color={darkMode ? '#cccccc' : '#383838'}
-        textAlign="center"
-        fontSize="sm"
-        py={0.5}
-      >
-        Codestream
-      </Box> */}
       <Navbar screen="room" />
       <Flex flex="1 0" minH={0}>
         <Container
@@ -135,8 +183,8 @@ export default function App() {
             size="sm"
             bgColor={darkMode ? '#3c3c3c' : 'white'}
             borderColor={darkMode ? '#3c3c3c' : 'white'}
-            // value={language}
-            // onChange={(event) => handleChangeLanguage(event.target.value)}
+            value={lang}
+            onChange={event => handleChangeLanguage(event.target.value)}
           >
             {language.map(lang => (
               <option key={lang} value={lang} style={{ color: 'black' }}>
@@ -149,6 +197,10 @@ export default function App() {
             Active Users
           </Heading>
           <Stack spacing={0} mb={1.5} fontSize="sm">
+            {/* {users?.map(([id, name, color]) => (
+              <chakra.h1 color={color}>{name}</chakra.h1>
+            ))} */}
+            {/* <chakra.h1>{name}</chakra.h1> */}
             {/* <User
               info={{ name, hue }}
               isMe
@@ -159,6 +211,17 @@ export default function App() {
             {Object.entries(users).map(([id, info]) => (
               <User key={id} info={info} darkMode={darkMode} />
             ))} */}
+            <User
+              info={{ name }}
+              isMe
+              onChangeName={name => name.length > 0 && setName(name)}
+              // onChangeColor={() => setHue(generateHue())}
+              darkMode={darkMode}
+            />
+            {users?.map(user => {
+              let userName = user.name;
+              <User info={{ userName }} />;
+            })}
           </Stack>
         </Container>
         <Flex flex={1} direction="column">
@@ -177,12 +240,12 @@ export default function App() {
             <Icon as={VscGist} fontSize="md" color="purple.500" />
             <Text>lol</Text>
           </HStack>
-          <Box flex={1} overflow="hidden">
+          <Box flex={1} overflow="hidden" style={{ fontSize: '14px' }}>
             <Editor
               position="absolute"
               autoScroll
               options={{
-                mode: 'c++',
+                mode: 'python',
                 theme: 'monokai',
                 lineWrapping: true,
                 smartIndent: true,

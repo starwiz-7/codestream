@@ -19,6 +19,9 @@
     "react-icons": "^4.3.1",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
+    "socket.io-client": "^4.3.0",
+    "unique-names-generator": "^4.6.0",
+    "use-local-storage-state": "^11.0.0",
     "web-vitals": "^0.2.2",
     "y-codemirror": "^2.1.1",
     "y-webrtc": "^10.2.0",
@@ -44,5 +47,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "webpack-remove-debug": "^0.1.0"
   }
 }

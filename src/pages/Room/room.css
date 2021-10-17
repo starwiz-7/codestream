@@ -20,7 +20,7 @@
   padding-left: 2px;
   padding-right: 2px;
   z-index: 3;
-  border-radius: 20%;
+  /* /* border-radius: 20%;  */
 }
 
 .react-codemirror2 {
