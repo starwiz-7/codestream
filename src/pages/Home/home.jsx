@@ -17,6 +17,7 @@ import {
   colors,
   animals,
 } from 'unique-names-generator';
+import { ReactComponent as Logo } from '../../assets/logo.svg';
 import Navbar from '../../components/navbar';
 import Features from '../../components/features';
 import Testimonial from '../../components/testimonial';

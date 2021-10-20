@@ -1,113 +1,109 @@
 import React, { useState } from 'react';
 import {
-  ChakraProvider,
   Box,
-  Button,
   Container,
   Flex,
   Heading,
   HStack,
   Icon,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Link,
   Select,
   Stack,
-  Switch,
   Text,
-  useToast,
-  IconButton,
-  chakra,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { createLocalStorageStateHook } from 'use-local-storage-state';
 import Navbar from '../../components/navbar';
-import RandomColor from 'randomcolor';
 import { useParams } from 'react-router-dom';
-import {
-  VscChevronRight,
-  VscFolderOpened,
-  VscGist,
-  VscRepoPull,
-} from 'react-icons/vsc';
+import { VscChevronRight, VscFolderOpened, VscGist } from 'react-icons/vsc';
 import './room.css';
 import language from './languages.json';
+
 //Editor and collab import
 import './editor';
 import { CodemirrorBinding } from 'y-codemirror';
+import RandomColor from 'randomcolor';
 import * as Y from 'yjs';
 import { WebrtcProvider } from 'y-webrtc';
 import { UnControlled as Editor } from 'react-codemirror2';
 import User from '../../components/user';
 import { socket } from '../../socket';
-
+import toast, { Toaster } from 'react-hot-toast';
 const getName = () => {
   return 'Anonymous shark';
 };
 
 const useStorage = createLocalStorageStateHook('name');
-export default function App(props) {
+export default function App() {
   const [darkMode, setDarkMode] = useState('darkMode', () => false);
   const [lang, setLang] = useState('plaintext');
-  const [name, setName] = useStorage('name', getName);
+  const [name, setName] = useStorage('Anonymous whale');
   const [users, setUsers] = useState();
   const { slug } = useParams();
-  const toast = useToast();
-  function handleDarkMode() {
-    setDarkMode(!darkMode);
-  }
-  const [screen, setScreeen] = useState('screen', () => true);
-  function handleScreen() {
-    setScreeen(!screen);
-  }
+
   const [editorInstance, setEditorInstance] = React.useState(null);
   const handleEditorDidMount = editor => {
     window.editor = editor;
     setEditorInstance(editor);
   };
   const prepareData = slug => {
+    if (name === undefined) {
+      setName('Anonymous shark');
+    }
     return {
-      name: name,
+      name: name ? name : 'Anonymous Shark',
+      color: 'green',
+      roomId: slug,
+      lang: lang,
+    };
+  };
+  const changeData = (slug, newName) => {
+    setName(newName);
+    return {
+      name: newName,
       color: 'green',
       roomId: slug,
     };
   };
   React.useEffect(() => {
-    console.log(slug);
+    // On joining room
     socket.emit('join-room', prepareData(slug));
-    socket.on('emit-language-changed', lang => {
+
+    //When someone in the room changes the language
+    socket.on('emit-language-changed', (lang, langName) => {
       console.error('langggg-changes');
       setLang(lang);
-      toast({
-        title: `${lang} changed`,
-        description: 'User changed the language',
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-        position: 'bottom-right',
-      });
+      toast.success(`Language changed to ${langName}`, { duration: 5000 });
     });
-    socket.on('on-join', (userMap, arg) => {
+
+    //When someone joins the room
+    socket.on('on-join', (userMap, arg, language) => {
       setUsers(userMap);
       console.error(userMap);
-      toast({
-        title: `${arg}`,
-        description: 'User changed the language',
-        status: 'success',
-        duration: 9000,
-        isClosable: true,
-        position: 'bottom-right',
-      });
+      toast.success(`${arg}`, { icon: '🧑', duration: 5000 });
+      setLang(language);
     });
-    socket.on('user-left', userMap => {
+
+    // When someone changes the name in room
+    socket.on('name-changed', userMap => {
       setUsers(userMap);
+    });
+
+    // When a user leaves the room
+    socket.on('user-left', (userMap, user) => {
+      setUsers(userMap);
+      toast.error(`${user} left the room`, { duration: 5000 });
     });
   }, []);
 
   const handleChangeLanguage = lang => {
     setLang(lang);
     console.error('handle-lang');
-    socket.emit('language-changed', lang);
+    socket.emit('language-changed', { lang, slug });
+  };
+
+  const handleNameChange = newName => {
+    toast.success('Name changed successfully', { duration: 5000 });
+    socket.emit('name-change', changeData(slug, newName));
   };
   React.useEffect(() => {
     if (editorInstance) {
@@ -115,7 +111,7 @@ export default function App(props) {
 
       let provider = null;
       try {
-        provider = new WebrtcProvider('Any Room- Name', ydoc, {
+        provider = new WebrtcProvider(slug, ydoc, {
           //Remember the other tab or
           //other user should be in same room for seeing real-time changes
           signaling: [
@@ -156,7 +152,7 @@ export default function App(props) {
         }
       };
     }
-  }, [editorInstance]);
+  }, [editorInstance, name]);
   return (
     <Flex
       direction="column"
@@ -164,7 +160,10 @@ export default function App(props) {
       bgColor={darkMode ? '#1e1e1e' : 'white'}
       color={darkMode ? '#cbcaca' : 'inherit'}
     >
-      <Navbar screen="room" />
+      <div>
+        <Toaster position="bottom-right" />
+      </div>
+      <Navbar screen="room" slug={slug} />
       <Flex flex="1 0" minH={0}>
         <Container
           w="xs"
@@ -181,14 +180,18 @@ export default function App(props) {
           </Heading>
           <Select
             size="sm"
-            bgColor={darkMode ? '#3c3c3c' : 'white'}
-            borderColor={darkMode ? '#3c3c3c' : 'white'}
+            // bgColor={darkMode ? '#3c3c3c' : 'white'}
+            // borderColor={darkMode ? '#3c3c3c' : 'white'}
             value={lang}
             onChange={event => handleChangeLanguage(event.target.value)}
           >
             {language.map(lang => (
-              <option key={lang} value={lang} style={{ color: 'black' }}>
-                {lang}
+              <option
+                key={lang.name}
+                value={lang.value}
+                style={{ color: 'black' }}
+              >
+                {lang.name}
               </option>
             ))}
           </Select>
@@ -197,31 +200,15 @@ export default function App(props) {
             Active Users
           </Heading>
           <Stack spacing={0} mb={1.5} fontSize="sm">
-            {/* {users?.map(([id, name, color]) => (
-              <chakra.h1 color={color}>{name}</chakra.h1>
-            ))} */}
-            {/* <chakra.h1>{name}</chakra.h1> */}
-            {/* <User
-              info={{ name, hue }}
-              isMe
-              onChangeName={(name) => name.length > 0 && setName(name)}
-              onChangeColor={() => setHue(generateHue())}
-              darkMode={darkMode}
-            />
-            {Object.entries(users).map(([id, info]) => (
-              <User key={id} info={info} darkMode={darkMode} />
-            ))} */}
             <User
               info={{ name }}
               isMe
-              onChangeName={name => name.length > 0 && setName(name)}
-              // onChangeColor={() => setHue(generateHue())}
+              onConfirm={handleNameChange}
               darkMode={darkMode}
             />
-            {users?.map(user => {
-              let userName = user.name;
-              <User info={{ userName }} />;
-            })}
+            {users?.map(user =>
+              user.id !== socket.id ? <User info={user} /> : <></>
+            )}
           </Stack>
         </Container>
         <Flex flex={1} direction="column">
@@ -245,8 +232,8 @@ export default function App(props) {
               position="absolute"
               autoScroll
               options={{
-                mode: 'python',
-                theme: 'monokai',
+                mode: lang,
+                theme: useColorModeValue('eclipse', 'monokai'),
                 lineWrapping: true,
                 smartIndent: true,
                 lineNumbers: true,
@@ -271,9 +258,9 @@ export default function App(props) {
           </Flex> */}
         </Flex>
       </Flex>
-      {/* <Box bgColor="#fff" textAlign="center">
+      <Box bgColor="#fff" textAlign="center">
         Star the repo
-      </Box> */}
+      </Box>
     </Flex>
   );
 }

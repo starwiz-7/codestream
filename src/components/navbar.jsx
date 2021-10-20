@@ -5,11 +5,17 @@ import {
   Stack,
   useColorModeValue,
   useDisclosure,
+  useClipboard,
   Button,
 } from '@chakra-ui/react';
 
 import { ColorModeSwitcher } from '../ColorModeSwitcher';
-export default function WithSubnavigation({ screen }) {
+import LogoBlack from '../assets/logo.svg';
+import LogoWhite from '../assets/logoWhite.svg';
+export default function WithSubnavigation({ screen, slug }) {
+  const { hasCopied, onCopy } = useClipboard(
+    'https://localhost:5000/room/' + slug
+  );
   return (
     <Box>
       <Flex
@@ -24,13 +30,19 @@ export default function WithSubnavigation({ screen }) {
         align={'center'}
       >
         <Flex flex={{ base: 1 }} justify={{ md: 'start' }}>
-          <chakra.h1
+          {/* <chakra.h1
             // textAlign={useBreakpointValue({ md: 'left' })}
             fontFamily={'heading'}
             color={useColorModeValue('gray.800', 'white')}
           >
             Codestream
-          </chakra.h1>
+          </chakra.h1> */}
+          <img
+            src={useColorModeValue(LogoBlack, LogoWhite)}
+            height="50"
+            width="200"
+            alt="logo"
+          ></img>
         </Flex>
 
         <Stack
@@ -39,7 +51,11 @@ export default function WithSubnavigation({ screen }) {
           direction={'row'}
           spacing={6}
         >
-          {screen !== null ? <Button>Share</Button> : <></>}
+          {screen !== undefined ? (
+            <Button onClick={onCopy}>{hasCopied ? 'Copied!' : 'Share'}</Button>
+          ) : (
+            <></>
+          )}
           <ColorModeSwitcher />
         </Stack>
       </Flex>

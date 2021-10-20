@@ -1,58 +1,78 @@
 [
-  "apex",
-  "azcli",
-  "bat",
-  "c",
-  "clojure",
-  "coffeescript",
-  "cpp",
-  "csharp",
-  "csp",
-  "css",
-  "dockerfile",
-  "fsharp",
-  "go",
-  "graphql",
-  "handlebars",
-  "html",
-  "ini",
-  "java",
-  "javascript",
-  "json",
-  "kotlin",
-  "less",
-  "lua",
-  "markdown",
-  "msdax",
-  "mysql",
-  "objective-c",
-  "pascal",
-  "perl",
-  "pgsql",
-  "php",
-  "plaintext",
-  "postiats",
-  "powerquery",
-  "powershell",
-  "pug",
-  "python",
-  "r",
-  "razor",
-  "redis",
-  "redshift",
-  "ruby",
-  "rust",
-  "sb",
-  "scheme",
-  "scss",
-  "shell",
-  "sol",
-  "sql",
-  "st",
-  "swift",
-  "tcl",
-  "typescript",
-  "vb",
-  "xml",
-  "yaml"
+  {
+    "name": "Plaintext",
+    "value": "plaintext"
+  },
+  {
+    "name": "C",
+    "value": "text/x-csrc"
+  },
+  {
+    "name": "C++",
+    "value": "text/x-c++src"
+  },
+  {
+    "name": "Java",
+    "value": "text/x-java"
+  },
+  {
+    "name": "C#",
+    "value": "text/x-csharp"
+  },
+  {
+    "name": "CSS",
+    "value": "text/css"
+  },
+  {
+    "name": "Golang",
+    "value": "text/x-go"
+  },
+  {
+    "name": "HTML",
+    "value": "application/xml"
+  },
+  {
+    "name": "Javascript",
+    "value": "text/javascript"
+  },
+  {
+    "name": "Typescript",
+    "value": "text/typescript"
+  },
+  {
+    "name": "Markdown",
+    "value": "text/x-markdown"
+  },
+  {
+    "name": "PHP",
+    "value": "application/x-httpd-php"
+  },
+  {
+    "name": "Python",
+    "value": "text/x-python"
+  },
+  {
+    "name": "R",
+    "value": "text/x-rsrc"
+  },
+  {
+    "name": "Ruby",
+    "value": "text/x-ruby"
+  },
+  {
+    "name": "Rust",
+    "value": "text/x-rustsrc"
+  },
+  {
+    "name": "Scala",
+    "value": "text/x-scala"
+  },
+  {
+    "name": "SCSS",
+    "value": "text/x-scss"
+  },
+  {
+    "name": "Swift",
+    "value": "text/x-swift"
+  }
 ]

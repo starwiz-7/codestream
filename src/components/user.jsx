@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -19,10 +20,14 @@ import { useRef } from 'react';
 import { FaPalette } from 'react-icons/fa';
 import { VscAccount } from 'react-icons/vsc';
 
-function User({ info, isMe = false, darkMode, onChangeName }) {
+function User({ info, isMe = false, darkMode, onChangeName, onConfirm }) {
   const inputRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const [edit, setEdit] = useState(info.name);
+  const clickHandler = () => {
+    onClose();
+    onConfirm(edit);
+  };
   const nameColor = 'green';
   return (
     <Popover
@@ -64,19 +69,21 @@ function User({ info, isMe = false, darkMode, onChangeName }) {
           <Input
             ref={inputRef}
             mb={2}
-            value={info.name}
+            value={edit}
             maxLength={25}
-            onChange={event => onChangeName?.(event.target.value)}
+            onChange={event =>
+              event.target.value.length > 0 && setEdit(event.target.value)
+            }
           />
-          <Button
+          {/* <Button
             size="sm"
             w="100%"
             leftIcon={<FaPalette />}
             colorScheme={darkMode ? 'whiteAlpha' : 'gray'}
-            //   onClick={onChangeColor}
+            // onClick={onChangeColor}
           >
             Change Color
-          </Button>
+          </Button> */}
         </PopoverBody>
         <PopoverFooter
           d="flex"
@@ -84,7 +91,7 @@ function User({ info, isMe = false, darkMode, onChangeName }) {
           borderColor={darkMode ? '#464647' : 'gray.200'}
         >
           <ButtonGroup size="sm">
-            <Button colorScheme="blue" onClick={onClose}>
+            <Button colorScheme="blue" onClick={clickHandler}>
               Done
             </Button>
           </ButtonGroup>
