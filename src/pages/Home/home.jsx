@@ -20,10 +20,19 @@ import Navbar from '../../components/navbar';
 import Features from '../../components/features';
 import Testimonial from '../../components/testimonial';
 import Footer from '../../components/footer';
+import { COLORS } from '../../colors';
+import EditorPicDark from '../../assets/code-dark.png';
+import EditorPicLight from '../../assets/code-light.png';
 
 const Home = () => {
   return (
-    <Box px={8} py={5} mx="auto" pb={20}>
+    <Box
+      px={8}
+      py={5}
+      mx="auto"
+      pb={20}
+      backgroundColor={useColorModeValue(COLORS.white, COLORS.dark)}
+    >
       <Navbar />
       <Box
         w={{ base: 'full', md: 11 / 12, xl: 9 / 12 }}
@@ -46,7 +55,7 @@ const Home = () => {
             bgGradient="linear(to-r, green.400,purple.500)"
             fontWeight="extrabold"
           >
-            customer feedback
+            code collaboration
           </Text>{' '}
           in one single place.
         </chakra.h1>
@@ -56,9 +65,8 @@ const Home = () => {
           fontSize={{ base: 'lg', md: 'xl' }}
           color={useColorModeValue('gray.600', 'gray.300')}
         >
-          Hellonext is a feature voting software where you can allow your users
-          to vote on features, publish roadmap, and complete your customer
-          feedback loop.
+          Codestream is a collaborative code editor where users can collaborate
+          with their team in realtime.
         </chakra.p>
         <Stack
           direction={{ base: 'column', sm: 'row' }}
@@ -104,12 +112,12 @@ const Home = () => {
           w="full"
           rounded="lg"
           shadow="2xl"
-          src="https://kutty.netlify.app/hero.jpg"
-          alt="Hellonext feedback boards software screenshot"
+          src={useColorModeValue(EditorPicDark, EditorPicLight)}
+          alt="Codestream editor"
         />
       </Box>
-      <Features />
-      <Testimonial />
+      {/* <Features /> */}
+      {/* <Testimonial /> */}
       <Footer />
     </Box>
   );

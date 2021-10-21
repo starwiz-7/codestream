@@ -8,6 +8,7 @@ import {
 } from '@chakra-ui/react';
 
 import { ColorModeSwitcher } from '../ColorModeSwitcher';
+import { COLORS } from '../colors';
 import LogoBlack from '../assets/logo.svg';
 import LogoWhite from '../assets/logoWhite.svg';
 export default function WithSubnavigation({ screen, slug }) {
@@ -15,7 +16,10 @@ export default function WithSubnavigation({ screen, slug }) {
   return (
     <Box>
       <Flex
-        bg={useColorModeValue('white', 'gray.800')}
+        bg={useColorModeValue(
+          screen !== undefined ? COLORS.roomWhite : COLORS.white,
+          COLORS.dark
+        )}
         color={useColorModeValue('gray.600', 'white')}
         minH={'60px'}
         py={{ base: 2 }}

@@ -32,6 +32,7 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/3024-night.css';
 import 'codemirror/theme/dracula.css';
 import 'codemirror/theme/monokai.css';
+import 'codemirror/theme/material.css';
 import 'codemirror/theme/material-palenight.css';
 import 'codemirror/theme/material-darker.css';
 import 'codemirror/theme/neat.css';

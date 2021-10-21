@@ -58,16 +58,25 @@ export default function SmallWithLogoLeft() {
         ></img>
         <Text>Made with ❤ by Aryan Yadav</Text>
         <Stack direction={'row'} spacing={6}>
-          <SocialButton label={'Twitter'} href={'#'}>
+          <SocialButton label={'Twitter'} href={'https://twitter.com/7Aryany'}>
             <FaTwitter />
           </SocialButton>
-          <SocialButton label={'LinkedIn'} href={'#'}>
+          <SocialButton
+            label={'LinkedIn'}
+            href={'https://www.linkedin.com/in/yadav-aryan/'}
+          >
             <FaLinkedinIn />
           </SocialButton>
-          <SocialButton label={'Instagram'} href={'#'}>
+          <SocialButton
+            label={'Instagram'}
+            href={'#https://www.instagram.com/aryann__7/'}
+          >
             <FaInstagram />
           </SocialButton>
-          <SocialButton label={'Github'} href={'#'}>
+          <SocialButton
+            label={'Github'}
+            href={'https://github.com/starwiz-7/codestream'}
+          >
             <FaGithub />
           </SocialButton>
         </Stack>

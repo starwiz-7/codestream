@@ -17,7 +17,7 @@ import { useParams } from 'react-router-dom';
 import { VscChevronRight, VscFolderOpened, VscGist } from 'react-icons/vsc';
 import './room.css';
 import language from './languages.json';
-
+import { COLORS } from '../../colors';
 //Editor and collab import
 import './editor';
 import { CodemirrorBinding } from 'y-codemirror';
@@ -154,8 +154,9 @@ export default function App() {
     <Flex
       direction="column"
       h="100vh"
-      bgColor={darkMode ? '#1e1e1e' : 'white'}
-      color={darkMode ? '#cbcaca' : 'inherit'}
+      bgColor={useColorModeValue(COLORS.white, COLORS.dark)}
+      // bgColor={darkMode ? '#1e1e1e' : 'white'}
+      color={useColorModeValue('#000', 'inherit')}
     >
       <div>
         <Toaster position="bottom-right" />
@@ -164,7 +165,8 @@ export default function App() {
       <Flex flex="1 0" minH={0}>
         <Container
           w="xs"
-          bgColor={darkMode ? '#252526' : '#f3f3f3'}
+          // bgColor={darkMode ? '#252526' : '#f3f3f3'}
+          bgColor={useColorModeValue('f3f3f3', COLORS.dark)}
           overflowY="auto"
           maxW="full"
           lineHeight={1.4}
@@ -179,13 +181,10 @@ export default function App() {
             size="sm"
             value={lang}
             onChange={event => handleChangeLanguage(event.target.value)}
+            // color="white"
           >
             {language.map(lang => (
-              <option
-                key={lang.name}
-                value={lang.value}
-                style={{ color: 'black' }}
-              >
+              <option key={lang.name} value={lang.value}>
                 {lang.name}
               </option>
             ))}
@@ -220,7 +219,7 @@ export default function App() {
             <Text>documents</Text>
             <Icon as={VscChevronRight} fontSize="md" />
             <Icon as={VscGist} fontSize="md" color="purple.500" />
-            <Text>lol</Text>
+            <Text>{slug}</Text>
           </HStack>
           <Box flex={1} overflow="hidden" style={{ fontSize: '14px' }}>
             <Editor
@@ -228,7 +227,7 @@ export default function App() {
               autoScroll
               options={{
                 mode: lang,
-                theme: useColorModeValue('eclipse', 'monokai'),
+                theme: useColorModeValue('eclipse', 'material'),
                 lineWrapping: true,
                 smartIndent: true,
                 lineNumbers: true,
@@ -253,9 +252,6 @@ export default function App() {
           </Flex> */}
         </Flex>
       </Flex>
-      <Box bgColor="#fff" textAlign="center">
-        Star the repo
-      </Box>
     </Flex>
   );
 }

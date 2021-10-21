@@ -15,18 +15,19 @@ import {
   PopoverTrigger,
   Text,
   useDisclosure,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { useRef } from 'react';
 import { FaPalette } from 'react-icons/fa';
 import { VscAccount } from 'react-icons/vsc';
-
+import { COLORS } from '../colors';
 function User({ info, isMe = false, darkMode, onChangeName, onConfirm }) {
   const inputRef = useRef(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [edit, setEdit] = useState(info.name);
   const clickHandler = () => {
     onClose();
-    onConfirm(edit);
+    if (edit.length > 0) onConfirm(edit);
   };
   const nameColor = 'green';
   return (
@@ -41,7 +42,7 @@ function User({ info, isMe = false, darkMode, onChangeName, onConfirm }) {
           p={2}
           rounded="md"
           _hover={{
-            bgColor: darkMode ? '#464647' : 'gray.200',
+            bgColor: useColorModeValue(COLORS.roomWhite, COLORS.roomDark),
             cursor: 'pointer',
           }}
           onClick={() => isMe && onOpen()}
@@ -54,32 +55,34 @@ function User({ info, isMe = false, darkMode, onChangeName, onConfirm }) {
         </HStack>
       </PopoverTrigger>
       <PopoverContent
-        bgColor={darkMode ? '#333333' : 'white'}
-        borderColor={darkMode ? '#464647' : 'gray.200'}
+        bgColor={useColorModeValue(COLORS.white, COLORS.roomDark)}
+        borderColor={useColorModeValue('gray.200', '#464647')}
       >
         <PopoverHeader
           fontWeight="semibold"
-          borderColor={darkMode ? '#464647' : 'gray.200'}
+          borderColor={useColorModeValue('gray.200', '#464647')}
         >
           Update Info
         </PopoverHeader>
-        <PopoverArrow bgColor={darkMode ? '#333333' : 'white'} />
+        <PopoverArrow
+          bgColor={useColorModeValue(COLORS.white, COLORS.roomDark)}
+        />
         <PopoverCloseButton />
-        <PopoverBody borderColor={darkMode ? '#464647' : 'gray.200'}>
+        <PopoverBody borderColor={useColorModeValue('gray.200', '#464647')}>
           <Input
             ref={inputRef}
             mb={2}
             value={edit}
             maxLength={25}
             onChange={event =>
-              event.target.value.length > 0 && setEdit(event.target.value)
+              event.target.value.length >= 0 && setEdit(event.target.value)
             }
           />
           {/* <Button
             size="sm"
             w="100%"
             leftIcon={<FaPalette />}
-            colorScheme={darkMode ? 'whiteAlpha' : 'gray'}
+            colorScheme={useColorModeValue'whiteAlpha' : 'gray'}
             // onClick={onChangeColor}
           >
             Change Color
@@ -88,7 +91,7 @@ function User({ info, isMe = false, darkMode, onChangeName, onConfirm }) {
         <PopoverFooter
           d="flex"
           justifyContent="flex-end"
-          borderColor={darkMode ? '#464647' : 'gray.200'}
+          borderColor={useColorModeValue('gray.200', '#464647')}
         >
           <ButtonGroup size="sm">
             <Button colorScheme="blue" onClick={clickHandler}>
