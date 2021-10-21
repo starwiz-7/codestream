@@ -1,0 +1,78 @@
+[
+  {
+    "name": "Plaintext",
+    "value": "plaintext"
+  },
+  {
+    "name": "C",
+    "value": "text/x-csrc"
+  },
+  {
+    "name": "C++",
+    "value": "text/x-c++src"
+  },
+  {
+    "name": "Java",
+    "value": "text/x-java"
+  },
+  {
+    "name": "C#",
+    "value": "text/x-csharp"
+  },
+  {
+    "name": "CSS",
+    "value": "text/css"
+  },
+  {
+    "name": "Golang",
+    "value": "text/x-go"
+  },
+  {
+    "name": "HTML",
+    "value": "application/xml"
+  },
+  {
+    "name": "Javascript",
+    "value": "text/javascript"
+  },
+  {
+    "name": "Typescript",
+    "value": "text/typescript"
+  },
+  {
+    "name": "Markdown",
+    "value": "text/x-markdown"
+  },
+  {
+    "name": "PHP",
+    "value": "application/x-httpd-php"
+  },
+  {
+    "name": "Python",
+    "value": "text/x-python"
+  },
+  {
+    "name": "R",
+    "value": "text/x-rsrc"
+  },
+  {
+    "name": "Ruby",
+    "value": "text/x-ruby"
+  },
+  {
+    "name": "Rust",
+    "value": "text/x-rustsrc"
+  },
+  {
+    "name": "Scala",
+    "value": "text/x-scala"
+  },
+  {
+    "name": "SCSS",
+    "value": "text/x-scss"
+  },
+  {
+    "name": "Swift",
+    "value": "text/x-swift"
+  }
+]
