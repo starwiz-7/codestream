@@ -2,9 +2,7 @@ import {
   Avatar,
   Box,
   chakra,
-  Container,
   Flex,
-  Icon,
   SimpleGrid,
   useColorModeValue,
 } from '@chakra-ui/react';

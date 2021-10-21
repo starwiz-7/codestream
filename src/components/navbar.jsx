@@ -1,10 +1,8 @@
 import {
-  chakra,
   Box,
   Flex,
   Stack,
   useColorModeValue,
-  useDisclosure,
   useClipboard,
   Button,
 } from '@chakra-ui/react';
@@ -13,9 +11,7 @@ import { ColorModeSwitcher } from '../ColorModeSwitcher';
 import LogoBlack from '../assets/logo.svg';
 import LogoWhite from '../assets/logoWhite.svg';
 export default function WithSubnavigation({ screen, slug }) {
-  const { hasCopied, onCopy } = useClipboard(
-    'https://localhost:5000/room/' + slug
-  );
+  const { hasCopied, onCopy } = useClipboard(window.location.href);
   return (
     <Box>
       <Flex
@@ -24,19 +20,11 @@ export default function WithSubnavigation({ screen, slug }) {
         minH={'60px'}
         py={{ base: 2 }}
         px={{ base: 2 }}
-        // borderBottom={1}
         borderStyle={'solid'}
         borderColor={useColorModeValue('gray.200', 'gray.900')}
         align={'center'}
       >
         <Flex flex={{ base: 1 }} justify={{ md: 'start' }}>
-          {/* <chakra.h1
-            // textAlign={useBreakpointValue({ md: 'left' })}
-            fontFamily={'heading'}
-            color={useColorModeValue('gray.800', 'white')}
-          >
-            Codestream
-          </chakra.h1> */}
           <img
             src={useColorModeValue(LogoBlack, LogoWhite)}
             height="50"

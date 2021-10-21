@@ -28,15 +28,12 @@ import { UnControlled as Editor } from 'react-codemirror2';
 import User from '../../components/user';
 import { socket } from '../../socket';
 import toast, { Toaster } from 'react-hot-toast';
-const getName = () => {
-  return 'Anonymous shark';
-};
 
 const useStorage = createLocalStorageStateHook('name');
 export default function App() {
   const [darkMode, setDarkMode] = useState('darkMode', () => false);
   const [lang, setLang] = useState('plaintext');
-  const [name, setName] = useStorage('Anonymous whale');
+  const [name, setName] = useStorage('Anonymous shark');
   const [users, setUsers] = useState();
   const { slug } = useParams();
 
@@ -180,8 +177,6 @@ export default function App() {
           </Heading>
           <Select
             size="sm"
-            // bgColor={darkMode ? '#3c3c3c' : 'white'}
-            // borderColor={darkMode ? '#3c3c3c' : 'white'}
             value={lang}
             onChange={event => handleChangeLanguage(event.target.value)}
           >
@@ -238,7 +233,7 @@ export default function App() {
                 smartIndent: true,
                 lineNumbers: true,
                 foldGutter: true,
-                tabSize: 2,
+                tabSize: 4,
                 gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
                 autoCloseTags: true,
                 matchBrackets: true,

@@ -1,8 +1,6 @@
 import {
-  Box,
   chakra,
   Container,
-  Link,
   Stack,
   Text,
   useColorModeValue,
@@ -39,7 +37,6 @@ const SocialButton = ({ children, label, href }) => {
 export default function SmallWithLogoLeft() {
   return (
     <chakra.footer
-      //   bg={useColorModeValue('gray.50', 'gray.900')}
       color={useColorModeValue('gray.700', 'gray.200')}
       mt={50}
       mb={-10}
@@ -48,7 +45,6 @@ export default function SmallWithLogoLeft() {
         as={Stack}
         maxW={'10xl'}
         pt={4}
-        // mb={-50}
         direction={{ base: 'column', md: 'row' }}
         spacing={4}
         justify={{ base: 'center', md: 'space-between' }}

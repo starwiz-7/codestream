@@ -12,22 +12,15 @@ import {
 import { Link } from 'react-router-dom';
 import {
   uniqueNamesGenerator,
-  Config,
   adjectives,
   colors,
   animals,
 } from 'unique-names-generator';
-import { ReactComponent as Logo } from '../../assets/logo.svg';
 import Navbar from '../../components/navbar';
 import Features from '../../components/features';
 import Testimonial from '../../components/testimonial';
-// import Footer from '@pages/Home/home';
-import { socket } from '../../socket';
 import Footer from '../../components/footer';
 
-const generateName = () => {
-  return uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] });
-};
 const Home = () => {
   return (
     <Box px={8} py={5} mx="auto" pb={20}>
@@ -114,22 +107,6 @@ const Home = () => {
           src="https://kutty.netlify.app/hero.jpg"
           alt="Hellonext feedback boards software screenshot"
         />
-        {/* <Button
-          as="a"
-          target="_blank"
-          href="https://github.com/starwiz-7"
-          position="fixed"
-          zIndex={10}
-          right="5"
-          bottom="5"
-          bg="#fff"
-          boxShadow="dark-lg"
-          color="#000"
-          //   p={1}
-          _hover={{ background: 'white' }}
-        >
-          Made with ❤ by Aryan
-        </Button> */}
       </Box>
       <Features />
       <Testimonial />
