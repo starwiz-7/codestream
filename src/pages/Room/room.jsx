@@ -12,16 +12,26 @@ import {
   Text,
   useColorModeValue,
   Tooltip,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from '@chakra-ui/react';
 import { createLocalStorageStateHook } from 'use-local-storage-state';
 import Navbar from '../../components/navbar';
+import CompileTab from './compiler';
 import { useParams } from 'react-router-dom';
 import './room.css';
 import language from './languages.json';
 import { COLORS } from '../../colors';
 
 //Icons
-import { BsArrowsAngleExpand, BsArrowsAngleContract } from 'react-icons/bs';
+import {
+  BsArrowsAngleExpand,
+  BsArrowsAngleContract,
+  BsTerminal,
+} from 'react-icons/bs';
 import { VscChevronRight, VscFolderOpened, VscGist } from 'react-icons/vsc';
 
 //Editor and collab import
@@ -294,6 +304,21 @@ export default function App() {
               }}
             />
           </Box>
+          <Accordion allowToggle>
+            <AccordionItem>
+              <AccordionPanel pb={4}>
+                <CompileTab editor={editorInstance} />
+              </AccordionPanel>
+              <h2>
+                <AccordionButton>
+                  <Box flex="1" textAlign="left">
+                    <BsTerminal size="25" />
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+            </AccordionItem>
+          </Accordion>
           {/* <Flex direction="row">
             <Button>Run</Button>
           </Flex> */}
