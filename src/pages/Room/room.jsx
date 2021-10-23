@@ -7,17 +7,23 @@ import {
   HStack,
   Icon,
   Select,
+  Spacer,
   Stack,
   Text,
   useColorModeValue,
+  Tooltip,
 } from '@chakra-ui/react';
 import { createLocalStorageStateHook } from 'use-local-storage-state';
 import Navbar from '../../components/navbar';
 import { useParams } from 'react-router-dom';
-import { VscChevronRight, VscFolderOpened, VscGist } from 'react-icons/vsc';
 import './room.css';
 import language from './languages.json';
 import { COLORS } from '../../colors';
+
+//Icons
+import { BsArrowsAngleExpand, BsArrowsAngleContract } from 'react-icons/bs';
+import { VscChevronRight, VscFolderOpened, VscGist } from 'react-icons/vsc';
+
 //Editor and collab import
 import './editor';
 import { CodemirrorBinding } from 'y-codemirror';
@@ -35,6 +41,7 @@ export default function App() {
   const [lang, setLang] = useState('plaintext');
   const [name, setName] = useStorage('Anonymous shark');
   const [users, setUsers] = useState();
+  const [zen, setZen] = useState(false);
   const { slug } = useParams();
 
   const [editorInstance, setEditorInstance] = React.useState(null);
@@ -205,21 +212,61 @@ export default function App() {
             )}
           </Stack>
         </Container>
-        <Flex flex={1} direction="column">
+        <Flex flex={1} direction="column" className={zen ? 'editorScreen' : ''}>
           <HStack
-            h={6}
+            h={!zen ? 6 : 10}
             spacing={1}
             color="#888888"
             fontWeight="medium"
             fontSize="13px"
             px={3.5}
             flexShrink={0}
+            bgColor={useColorModeValue(COLORS.white, COLORS.dark)}
           >
-            <Icon as={VscFolderOpened} fontSize="md" color="blue.500" />
-            <Text>documents</Text>
-            <Icon as={VscChevronRight} fontSize="md" />
-            <Icon as={VscGist} fontSize="md" color="purple.500" />
-            <Text>{slug}</Text>
+            <Flex direction="row">
+              <Icon as={VscFolderOpened} fontSize="md" color="blue.500" />
+              <Text>documents</Text>
+              <Icon as={VscChevronRight} fontSize="md" />
+              <Icon as={VscGist} fontSize="md" color="purple.500" />
+              <Text>{slug}</Text>
+            </Flex>
+            <Spacer />
+            <Flex px={2} alignItems="center">
+              {zen ? (
+                <Select
+                  size="sm"
+                  value={lang}
+                  onChange={event => handleChangeLanguage(event.target.value)}
+                  marginRight={5}
+                >
+                  {language.map(lang => (
+                    <option key={lang.name} value={lang.value}>
+                      {lang.name}
+                    </option>
+                  ))}
+                </Select>
+              ) : (
+                <></>
+              )}
+              <Tooltip
+                label="Zen mode"
+                closeDelay={500}
+                bg="gray.300"
+                placement="left"
+              >
+                <span>
+                  <Icon
+                    // py={1}
+                    cursor="pointer"
+                    as={zen ? BsArrowsAngleContract : BsArrowsAngleExpand}
+                    fontSize="md"
+                    onClick={() => {
+                      setZen(!zen);
+                    }}
+                  />
+                </span>
+              </Tooltip>
+            </Flex>
           </HStack>
           <Box flex={1} overflow="hidden" style={{ fontSize: '14px' }}>
             <Editor
