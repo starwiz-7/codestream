@@ -14,9 +14,17 @@ import {
 import { BsCodeSlash } from 'react-icons/bs';
 export default function Compile({ editor }) {
   let [output, setOutput] = useState('');
-  const handleOutput = () => {
-    setOutput(editor.getValue());
+  const [loading, setLoading] = useState(false);
+  let [input, setInput] = useState('');
+  let handleInputChange = e => {
+    let inputValue = e.target.value;
+    setInput(inputValue);
   };
+  async function handleOutput() {
+    setLoading(true);
+    const responses = await fetch('https://cstream.free.beeceptor.com/help');
+    setLoading(false);
+  }
   return (
     <Box>
       <Tabs isFitted variant="enclosed">
@@ -26,7 +34,12 @@ export default function Compile({ editor }) {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Textarea placeholder="Input" fontSize="13px" />
+            <Textarea
+              placeholder="Input"
+              fontSize="13px"
+              value={input}
+              onChange={handleInputChange}
+            />
           </TabPanel>
           <TabPanel>
             <Textarea
@@ -38,7 +51,12 @@ export default function Compile({ editor }) {
           </TabPanel>
         </TabPanels>
       </Tabs>
-      <Button onClick={handleOutput} float="right" leftIcon={<BsCodeSlash />}>
+      <Button
+        onClick={handleOutput}
+        float="right"
+        leftIcon={<BsCodeSlash />}
+        isLoading={loading}
+      >
         Run
       </Button>
     </Box>
