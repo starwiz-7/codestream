@@ -11,6 +11,7 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  Tooltip,
 } from '@chakra-ui/react';
 import { createLocalStorageStateHook } from 'use-local-storage-state';
 import Navbar from '../../components/navbar';
@@ -247,15 +248,24 @@ export default function App() {
               ) : (
                 <></>
               )}
-              <Icon
-                // py={1}
-                cursor="pointer"
-                as={zen ? BsArrowsAngleContract : BsArrowsAngleExpand}
-                fontSize="md"
-                onClick={() => {
-                  setZen(!zen);
-                }}
-              />
+              <Tooltip
+                label="Zen mode"
+                closeDelay={500}
+                bg="gray.300"
+                placement="left"
+              >
+                <span>
+                  <Icon
+                    // py={1}
+                    cursor="pointer"
+                    as={zen ? BsArrowsAngleContract : BsArrowsAngleExpand}
+                    fontSize="md"
+                    onClick={() => {
+                      setZen(!zen);
+                    }}
+                  />
+                </span>
+              </Tooltip>
             </Flex>
           </HStack>
           <Box flex={1} overflow="hidden" style={{ fontSize: '14px' }}>
