@@ -176,7 +176,7 @@ export default function App() {
       color={useColorModeValue('#000', 'inherit')}
     >
       <div>
-        <Toaster position="bottom-right" />
+        <Toaster position="bottom-center" />
       </div>
       <Navbar screen="room" slug={slug} />
       <Flex flex="1 0" minH={0}>
@@ -260,8 +260,7 @@ export default function App() {
               )}
               <Tooltip
                 label="Zen mode"
-                closeDelay={500}
-                bg="gray.300"
+                bg={useColorModeValue('black', 'gray.300')}
                 placement="left"
               >
                 <span>
@@ -307,7 +306,7 @@ export default function App() {
           <Accordion allowToggle>
             <AccordionItem>
               <AccordionPanel pb={4}>
-                <CompileTab editor={editorInstance} />
+                <CompileTab editor={editorInstance} language={lang} />
               </AccordionPanel>
               <h2>
                 <AccordionButton>
