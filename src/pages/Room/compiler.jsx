@@ -38,7 +38,7 @@ export default function Compile({ editor, language }) {
     socket.emit('execute-code-start');
     const response = await axios({
       method: 'POST',
-      url: `http://localhost:5000/api/execute`,
+      url: `${process.env.REACT_APP_SERVER}/api/execute`,
       data: {
         script: editor.getValue(),
         lang: language,
