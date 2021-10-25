@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Tabs,
@@ -8,21 +8,25 @@ import {
   TabPanel,
   Button,
   Textarea,
+  useColorModeValue,
 } from '@chakra-ui/react';
 //Icons
 import { BsCodeSlash } from 'react-icons/bs';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
+import { socket } from '../../socket';
 
 export default function Compile({ editor, language }) {
   let [output, setOutput] = useState('');
   const [loading, setLoading] = useState(false);
   let [input, setInput] = useState('');
-  const [tabIndex, setTabIndex] = React.useState(0);
+  const [tabIndex, setTabIndex] = useState(0);
+  const [error, setError] = useState(false);
 
   let handleInputChange = e => {
     let inputValue = e.target.value;
     setInput(inputValue);
+    socket.emit('input-data', { data: inputValue });
   };
 
   const handleTabsChange = index => {
@@ -31,6 +35,7 @@ export default function Compile({ editor, language }) {
 
   async function compileCode() {
     setLoading(true);
+    socket.emit('execute-code-start');
     const response = await axios({
       method: 'POST',
       url: `http://localhost:5000/api/execute`,
@@ -41,10 +46,35 @@ export default function Compile({ editor, language }) {
       },
       responseType: 'json',
     });
+    socket.emit('code-executed', { data: response.data });
+    if (response.data.memory === null || response.data.memory === null) {
+      setError(true);
+      toast.error('Error encountered while execution');
+    } else {
+      setError(false);
+      toast.success('Code executed successfully!!');
+    }
     setOutput(response.data.output);
     setTabIndex(1);
     setLoading(false);
   }
+  useEffect(() => {
+    var toastId;
+    socket.on('emit-execute-code-start', () => {
+      toastId = toast.loading('Compiling....');
+      setLoading(true);
+    });
+    socket.on('emit-code-executed', response => {
+      toast.dismiss(toastId);
+      setOutput(response.output);
+      setTabIndex(1);
+      setLoading(false);
+    });
+    socket.on('emit-input-data', ({ inputData }) => {
+      setInput(inputData);
+    });
+  }, []);
+
   return (
     <Box>
       <Tabs
@@ -76,6 +106,9 @@ export default function Compile({ editor, language }) {
               value={output}
               height={150}
               resize="none"
+              color={useColorModeValue(
+                error ? ('red.500', 'red.500') : ('white', 'black')
+              )}
             />
           </TabPanel>
         </TabPanels>

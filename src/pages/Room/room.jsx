@@ -47,7 +47,6 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const useStorage = createLocalStorageStateHook('name');
 export default function App() {
-  const [darkMode, setDarkMode] = useState('darkMode', () => false);
   const [lang, setLang] = useState('plaintext');
   const [name, setName] = useStorage('Anonymous shark');
   const [users, setUsers] = useState();
@@ -211,12 +210,7 @@ export default function App() {
             Active Users
           </Heading>
           <Stack spacing={0} mb={1.5} fontSize="sm">
-            <User
-              info={{ name }}
-              isMe
-              onConfirm={handleNameChange}
-              darkMode={darkMode}
-            />
+            <User info={{ name }} isMe onConfirm={handleNameChange} />
             {users?.map(user =>
               user.id !== socket.id ? <User info={user} /> : <></>
             )}
