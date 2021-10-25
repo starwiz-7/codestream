@@ -20,10 +20,6 @@
     "value": "text/x-csharp"
   },
   {
-    "name": "CSS",
-    "value": "text/css"
-  },
-  {
     "name": "Golang",
     "value": "text/x-go"
   },
@@ -34,14 +30,6 @@
   {
     "name": "Javascript",
     "value": "text/javascript"
-  },
-  {
-    "name": "Typescript",
-    "value": "text/typescript"
-  },
-  {
-    "name": "Markdown",
-    "value": "text/x-markdown"
   },
   {
     "name": "PHP",
@@ -66,10 +54,6 @@
   {
     "name": "Scala",
     "value": "text/x-scala"
-  },
-  {
-    "name": "SCSS",
-    "value": "text/x-scss"
   },
   {
     "name": "Swift",
