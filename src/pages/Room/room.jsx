@@ -249,7 +249,6 @@ export default function App() {
                 info={{ name }}
                 isMe
                 onConfirm={handleNameChange}
-                darkMode={darkMode}
               />
               {users?.map(user =>
                 user.id !== socket.id ? <User info={user} /> : <></>
