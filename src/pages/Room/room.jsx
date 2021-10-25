@@ -29,7 +29,6 @@ import { createLocalStorageStateHook } from 'use-local-storage-state';
 import Navbar from '../../components/navbar';
 import CompileTab from './compiler';
 import { useParams } from 'react-router-dom';
-import { VscChevronRight, VscFolderOpened, VscGist, VscMenu } from 'react-icons/vsc';
 
 import './room.css';
 import language from './languages.json';
@@ -41,7 +40,7 @@ import {
   BsArrowsAngleContract,
   BsTerminal,
 } from 'react-icons/bs';
-import { VscChevronRight, VscFolderOpened, VscGist } from 'react-icons/vsc';
+import { VscChevronRight, VscFolderOpened, VscGist, VscMenu } from 'react-icons/vsc';
 
 //Editor and collab import
 import './editor';
