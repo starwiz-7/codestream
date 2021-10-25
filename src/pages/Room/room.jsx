@@ -18,11 +18,10 @@ import {
   useDisclosure,
   Button,
 } from '@chakra-ui/react';
-import { HamburgerIcon } from '@chakra-ui/icons'
 import { createLocalStorageStateHook } from 'use-local-storage-state';
 import Navbar from '../../components/navbar';
 import { useParams } from 'react-router-dom';
-import { VscChevronRight, VscFolderOpened, VscGist } from 'react-icons/vsc';
+import { VscChevronRight, VscFolderOpened, VscGist, VscMenu } from 'react-icons/vsc';
 import './room.css';
 import language from './languages.json';
 import { COLORS } from '../../colors';
@@ -185,7 +184,7 @@ export default function App() {
         marginLeft='auto'
         top='-42px'
       >
-        <HamburgerIcon/>
+        <Icon as={VscMenu} fontSize="lg" />
       </Button>
       <Drawer
       isOpen={isOpen}
