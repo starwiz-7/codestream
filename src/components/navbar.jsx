@@ -5,6 +5,7 @@ import {
   useColorModeValue,
   useClipboard,
   Button,
+  Center
 } from '@chakra-ui/react';
 
 import { ColorModeSwitcher } from '../ColorModeSwitcher';
@@ -32,7 +33,7 @@ export default function WithSubnavigation({ screen, slug }) {
           <img
             src={useColorModeValue(LogoBlack, LogoWhite)}
             height="50"
-            width="200"
+            width="150"
             alt="logo"
           ></img>
         </Flex>
@@ -41,7 +42,7 @@ export default function WithSubnavigation({ screen, slug }) {
           flex={{ base: 1, md: 0 }}
           justify={'flex-end'}
           direction={'row'}
-          spacing={6}
+          spacing={3}
         >
           {screen !== undefined ? (
             <Button onClick={onCopy}>{hasCopied ? 'Copied!' : 'Share'}</Button>
@@ -49,6 +50,11 @@ export default function WithSubnavigation({ screen, slug }) {
             <></>
           )}
           <ColorModeSwitcher />
+          {screen !== undefined ? (
+            <Center w="40px" display={{ base: 'block', md: 'none' }}></Center>
+          ) : (
+            <></>
+          )}
         </Stack>
       </Flex>
     </Box>
