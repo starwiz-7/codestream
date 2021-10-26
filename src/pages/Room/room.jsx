@@ -309,7 +309,7 @@ export default function App() {
             flexShrink={0}
             bgColor={useColorModeValue(COLORS.white, COLORS.dark)}
           >
-            <Flex direction="row">
+            <Flex direction="row" display={{ base: 'none', sm: 'flex' }}>   {/* Hide breadcrumbs on small screens */}
               <Icon as={VscFolderOpened} fontSize="md" color="blue.500" />
               <Text>documents</Text>
               <Icon as={VscChevronRight} fontSize="md" />

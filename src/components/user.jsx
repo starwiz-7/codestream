@@ -32,7 +32,7 @@ function User({ info, isMe = false, darkMode, onChangeName, onConfirm }) {
   const nameColor = 'green';
   return (
     <Popover
-      placement="right"
+      placement="bottom"
       isOpen={isOpen}
       onClose={onClose}
       initialFocusRef={inputRef}
