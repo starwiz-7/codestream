@@ -11,18 +11,36 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  Drawer,
+  DrawerBody,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  useDisclosure,
+  Button,
   Tooltip,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from '@chakra-ui/react';
 import { createLocalStorageStateHook } from 'use-local-storage-state';
 import Navbar from '../../components/navbar';
+import CompileTab from './compiler';
 import { useParams } from 'react-router-dom';
+
 import './room.css';
 import language from './languages.json';
 import { COLORS } from '../../colors';
 
 //Icons
-import { BsArrowsAngleExpand, BsArrowsAngleContract } from 'react-icons/bs';
-import { VscChevronRight, VscFolderOpened, VscGist } from 'react-icons/vsc';
+import {
+  BsArrowsAngleExpand,
+  BsArrowsAngleContract,
+  BsTerminal,
+} from 'react-icons/bs';
+import { VscChevronRight, VscFolderOpened, VscGist, VscMenu } from 'react-icons/vsc';
 
 //Editor and collab import
 import './editor';
@@ -37,7 +55,6 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const useStorage = createLocalStorageStateHook('name');
 export default function App() {
-  const [darkMode, setDarkMode] = useState('darkMode', () => false);
   const [lang, setLang] = useState('plaintext');
   const [name, setName] = useStorage('Anonymous shark');
   const [users, setUsers] = useState();
@@ -157,6 +174,10 @@ export default function App() {
       };
     }
   }, [editorInstance, name]);
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const btnRef = React.useRef()
+
   return (
     <Flex
       direction="column"
@@ -166,11 +187,81 @@ export default function App() {
       color={useColorModeValue('#000', 'inherit')}
     >
       <div>
-        <Toaster position="bottom-right" />
+        <Toaster position="bottom-center" />
       </div>
       <Navbar screen="room" slug={slug} />
-      <Flex flex="1 0" minH={0}>
+      <Button
+        onClick={onOpen}
+        display={{ base: 'block', md: 'none'}}  // hide on desktop
+        colorScheme="default" variant="ghost"
+        w='50px'
+        h='0'
+        size='lg'
+        marginRight='1em'
+        marginLeft='auto'
+        top='-42px'
+      >
+        <Icon as={VscMenu} fontSize="lg" />
+      </Button>
+      <Drawer
+      isOpen={isOpen}
+      placement="right"
+      onClose={onClose}
+      finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerBody bgColor={useColorModeValue('f3f3f3', COLORS.dark)}>
+            <Container
+            display={{ base: 'block', md: 'none' }}  // hide on mobile
+            w="xs"
+            // bgColor={darkMode ? '#252526' : '#f3f3f3'}
+            bgColor={useColorModeValue('f3f3f3', COLORS.dark)}
+            overflowY="auto"
+            maxW="full"
+            lineHeight={1.4}
+            py={4}
+          >
+            {/* <ConnectionStatus darkMode={darkMode} connection={connection} /> */}
+
+            <Heading mt={4} mb={1.5} size="sm">
+              Language
+            </Heading>
+            <Select
+              size="sm"
+              value={lang}
+              onChange={event => handleChangeLanguage(event.target.value)}
+              // color="white"
+            >
+              {language.map(lang => (
+                <option key={lang.name} value={lang.value}>
+                  {lang.name}
+                </option>
+              ))}
+            </Select>
+
+            <Heading mt={4} mb={1.5} size="sm">
+              Active Users
+            </Heading>
+            <Stack spacing={0} mb={1.5} fontSize="sm">
+              <User
+                info={{ name }}
+                isMe
+                onConfirm={handleNameChange}
+              />
+              {users?.map(user =>
+                user.id !== socket.id ? <User info={user} /> : <></>
+              )}
+            </Stack>
+          </Container>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+
+      <Flex flex="1 0" minH={0} >
         <Container
+          display={{ base: 'none', md: 'block' }}  // hide on mobile
           w="xs"
           // bgColor={darkMode ? '#252526' : '#f3f3f3'}
           bgColor={useColorModeValue('f3f3f3', COLORS.dark)}
@@ -201,12 +292,7 @@ export default function App() {
             Active Users
           </Heading>
           <Stack spacing={0} mb={1.5} fontSize="sm">
-            <User
-              info={{ name }}
-              isMe
-              onConfirm={handleNameChange}
-              darkMode={darkMode}
-            />
+            <User info={{ name }} isMe onConfirm={handleNameChange} />
             {users?.map(user =>
               user.id !== socket.id ? <User info={user} /> : <></>
             )}
@@ -223,7 +309,7 @@ export default function App() {
             flexShrink={0}
             bgColor={useColorModeValue(COLORS.white, COLORS.dark)}
           >
-            <Flex direction="row">
+            <Flex direction="row" display={{ base: 'none', sm: 'flex' }}>   {/* Hide breadcrumbs on small screens */}
               <Icon as={VscFolderOpened} fontSize="md" color="blue.500" />
               <Text>documents</Text>
               <Icon as={VscChevronRight} fontSize="md" />
@@ -250,8 +336,7 @@ export default function App() {
               )}
               <Tooltip
                 label="Zen mode"
-                closeDelay={500}
-                bg="gray.300"
+                bg={useColorModeValue('black', 'gray.300')}
                 placement="left"
               >
                 <span>
@@ -294,6 +379,21 @@ export default function App() {
               }}
             />
           </Box>
+          <Accordion allowToggle>
+            <AccordionItem>
+              <AccordionPanel pb={4}>
+                <CompileTab editor={editorInstance} language={lang} />
+              </AccordionPanel>
+              <h2>
+                <AccordionButton>
+                  <Box flex="1" textAlign="left">
+                    <BsTerminal size="25" />
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
+              </h2>
+            </AccordionItem>
+          </Accordion>
           {/* <Flex direction="row">
             <Button>Run</Button>
           </Flex> */}
