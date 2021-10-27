@@ -40,7 +40,12 @@ import {
   BsArrowsAngleContract,
   BsTerminal,
 } from 'react-icons/bs';
-import { VscChevronRight, VscFolderOpened, VscGist, VscMenu } from 'react-icons/vsc';
+import {
+  VscChevronRight,
+  VscFolderOpened,
+  VscGist,
+  VscMenu,
+} from 'react-icons/vsc';
 
 //Editor and collab import
 import './editor';
@@ -175,8 +180,8 @@ export default function App() {
     }
   }, [editorInstance, name]);
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const btnRef = React.useRef()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = React.useRef();
 
   return (
     <Flex
@@ -192,76 +197,79 @@ export default function App() {
       <Navbar screen="room" slug={slug} />
       <Button
         onClick={onOpen}
-        display={{ base: 'block', md: 'none'}}  // hide on desktop
-        colorScheme="default" variant="ghost"
-        w='50px'
-        h='0'
-        size='lg'
-        marginRight='1em'
-        marginLeft='auto'
-        top='-42px'
+        display={{ base: 'block', md: 'none' }} // hide on desktop
+        colorScheme="default"
+        variant="ghost"
+        w="50px"
+        h="0"
+        size="lg"
+        marginRight="1em"
+        marginLeft="auto"
+        top="-42px"
       >
         <Icon as={VscMenu} fontSize="lg" />
       </Button>
       <Drawer
-      isOpen={isOpen}
-      placement="right"
-      onClose={onClose}
-      finalFocusRef={btnRef}
+        isOpen={isOpen}
+        placement="right"
+        onClose={onClose}
+        finalFocusRef={btnRef}
       >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerBody bgColor={useColorModeValue('f3f3f3', COLORS.dark)}>
             <Container
-            display={{ base: 'block', md: 'none' }}  // hide on mobile
-            w="xs"
-            // bgColor={darkMode ? '#252526' : '#f3f3f3'}
-            bgColor={useColorModeValue('f3f3f3', COLORS.dark)}
-            overflowY="auto"
-            maxW="full"
-            lineHeight={1.4}
-            py={4}
-          >
-            {/* <ConnectionStatus darkMode={darkMode} connection={connection} /> */}
-
-            <Heading mt={4} mb={1.5} size="sm">
-              Language
-            </Heading>
-            <Select
-              size="sm"
-              value={lang}
-              onChange={event => handleChangeLanguage(event.target.value)}
-              // color="white"
+              display={{ base: 'block', md: 'none' }} // hide on mobile
+              w="xs"
+              // bgColor={darkMode ? '#252526' : '#f3f3f3'}
+              bgColor={useColorModeValue('f3f3f3', COLORS.dark)}
+              overflowY="auto"
+              maxW="full"
+              lineHeight={1.4}
+              py={4}
             >
-              {language.map(lang => (
-                <option key={lang.name} value={lang.value}>
-                  {lang.name}
-                </option>
-              ))}
-            </Select>
+              {/* <ConnectionStatus darkMode={darkMode} connection={connection} /> */}
 
-            <Heading mt={4} mb={1.5} size="sm">
-              Active Users
-            </Heading>
-            <Stack spacing={0} mb={1.5} fontSize="sm">
-              <User
-                info={{ name }}
-                isMe
-                onConfirm={handleNameChange}
-              />
-              {users?.map(user =>
-                user.id !== socket.id ? <User info={user} /> : <></>
-              )}
-            </Stack>
-          </Container>
+              <Heading mt={4} mb={1.5} size="sm">
+                Language
+              </Heading>
+              <Select
+                size="sm"
+                value={lang}
+                onChange={event => handleChangeLanguage(event.target.value)}
+                // color="white"
+              >
+                {language.map(lang => (
+                  <option key={lang.name} value={lang.value}>
+                    {lang.name}
+                  </option>
+                ))}
+              </Select>
+
+              <Heading mt={4} mb={1.5} size="sm">
+                Users
+              </Heading>
+              <Stack
+                spacing={0}
+                fontSize="sm"
+                display="block"
+                overflowY="auto"
+                height={150}
+              >
+                <User info={{ name }} isMe onConfirm={handleNameChange} />
+                {users?.map(user =>
+                  user.id !== socket.id ? <User info={user} /> : <></>
+                )}
+              </Stack>
+            </Container>
           </DrawerBody>
         </DrawerContent>
       </Drawer>
 
-      <Flex flex="1 0" minH={0} >
+      <Flex flex="1 0" minH={0}>
         <Container
-          display={{ base: 'none', md: 'block' }}  // hide on mobile
+          display={{ base: 'none', md: 'block' }} // hide on mobile
           w="xs"
           // bgColor={darkMode ? '#252526' : '#f3f3f3'}
           bgColor={useColorModeValue('f3f3f3', COLORS.dark)}
@@ -289,9 +297,16 @@ export default function App() {
           </Select>
 
           <Heading mt={4} mb={1.5} size="sm">
-            Active Users
+            Users
           </Heading>
-          <Stack spacing={0} mb={1.5} fontSize="sm">
+          <Stack
+            spacing={0}
+            fontSize="sm"
+            height={200}
+            overflowX="hidden"
+            overflowY="auto"
+            display="block"
+          >
             <User info={{ name }} isMe onConfirm={handleNameChange} />
             {users?.map(user =>
               user.id !== socket.id ? <User info={user} /> : <></>
@@ -309,7 +324,9 @@ export default function App() {
             flexShrink={0}
             bgColor={useColorModeValue(COLORS.white, COLORS.dark)}
           >
-            <Flex direction="row" display={{ base: 'none', sm: 'flex' }}>   {/* Hide breadcrumbs on small screens */}
+            <Flex direction="row" display={{ base: 'none', sm: 'flex' }}>
+              {' '}
+              {/* Hide breadcrumbs on small screens */}
               <Icon as={VscFolderOpened} fontSize="md" color="blue.500" />
               <Text>documents</Text>
               <Icon as={VscChevronRight} fontSize="md" />
