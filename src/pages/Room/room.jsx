@@ -231,7 +231,7 @@ export default function App() {
             >
               {/* <ConnectionStatus darkMode={darkMode} connection={connection} /> */}
 
-              <Heading mb={1.5} size="sm">
+              <Heading mt={8} mb={1.5} size="sm">
                 Language
               </Heading>
               <Select
@@ -261,6 +261,7 @@ export default function App() {
                   user.id !== socket.id ? <User info={user} /> : <></>
                 )}
               </Stack>
+              <Chat name={name} id={socket.id} mb={4} />
             </Container>
           </DrawerBody>
         </DrawerContent>
@@ -312,7 +313,7 @@ export default function App() {
               user.id !== socket.id ? <User info={user} /> : <></>
             )}
           </Stack>
-          <Chat />
+          <Chat name={name} id={socket.id} />
         </Container>
         <Flex flex={1} direction="column" className={zen ? 'editorScreen' : ''}>
           <HStack
@@ -398,7 +399,9 @@ export default function App() {
             />
           </Box>
           <Accordion allowToggle>
-            <AccordionItem>
+            <AccordionItem
+              bgColor={useColorModeValue(COLORS.white, COLORS.dark)}
+            >
               <AccordionPanel pb={4}>
                 <CompileTab editor={editorInstance} language={lang} />
               </AccordionPanel>
