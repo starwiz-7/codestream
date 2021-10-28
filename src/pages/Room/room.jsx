@@ -28,6 +28,7 @@ import {
 import { createLocalStorageStateHook } from 'use-local-storage-state';
 import Navbar from '../../components/navbar';
 import CompileTab from './compiler';
+import Chat from './chat';
 import { useParams } from 'react-router-dom';
 
 import './room.css';
@@ -227,18 +228,16 @@ export default function App() {
               overflowY="auto"
               maxW="full"
               lineHeight={1.4}
-              py={4}
             >
               {/* <ConnectionStatus darkMode={darkMode} connection={connection} /> */}
 
-              <Heading mt={4} mb={1.5} size="sm">
+              <Heading mb={1.5} size="sm">
                 Language
               </Heading>
               <Select
                 size="sm"
                 value={lang}
                 onChange={event => handleChangeLanguage(event.target.value)}
-                // color="white"
               >
                 {language.map(lang => (
                   <option key={lang.name} value={lang.value}>
@@ -276,11 +275,11 @@ export default function App() {
           overflowY="auto"
           maxW="full"
           lineHeight={1.4}
-          py={4}
+          py={1}
         >
           {/* <ConnectionStatus darkMode={darkMode} connection={connection} /> */}
 
-          <Heading mt={4} mb={1.5} size="sm">
+          <Heading mb={1.5} size="sm">
             Language
           </Heading>
           <Select
@@ -302,16 +301,18 @@ export default function App() {
           <Stack
             spacing={0}
             fontSize="sm"
-            height={200}
+            height={170}
             overflowX="hidden"
             overflowY="auto"
             display="block"
+            maxHeight="max-content"
           >
             <User info={{ name }} isMe onConfirm={handleNameChange} />
             {users?.map(user =>
               user.id !== socket.id ? <User info={user} /> : <></>
             )}
           </Stack>
+          <Chat />
         </Container>
         <Flex flex={1} direction="column" className={zen ? 'editorScreen' : ''}>
           <HStack
