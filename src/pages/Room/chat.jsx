@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Flex,
   Button,
   Input,
   Heading,
+  chakra,
   useColorModeValue,
+  Icon,
 } from '@chakra-ui/react';
 import './room.css';
 import { socket } from 'src/socket';
 import { COLORS } from '../../colors';
+import { VscAccount } from 'react-icons/vsc';
 
 const Chat = ({ name, id }) => {
   const [message, setMessage] = useState('');
   const [messageData, setMessageData] = useState([]);
-
+  const chatBoxRef = useRef(null);
   let chatBg = useColorModeValue('#383B40', '#F1F2F6');
   let textBg = useColorModeValue('white', 'black');
   useEffect(() => {
@@ -29,6 +32,9 @@ const Chat = ({ name, id }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (chatBoxRef.current) chatBoxRef.current.scrollIntoView();
+  }, [messageData]);
   const sendMessage = e => {
     e.preventDefault();
     console.log('cool');
@@ -65,42 +71,70 @@ const Chat = ({ name, id }) => {
         border="1px solid"
         borderColor={useColorModeValue(COLORS.dark, COLORS.white)}
       >
-        {messageData.map((element, index) => {
+        {messageData.map(element => {
           if (element.socketId === id) {
-            // return <ChatMsg isMe messages={[...element.messages]} />;
             return (
-              <Box
-                borderRadius={'20px 20px 0 20px'}
-                float={'right'}
-                padding={2}
-                maxWidth={200}
-                bgColor={'#0086FF'}
-                color="white"
-                mt={5}
-                ml={'auto'}
+              <Flex
+                direction="column"
+                position="relative"
+                float="right"
+                ml="auto"
+                justifyContent="flex-start"
+                alignItems="flex-start"
               >
-                {element.messages[0]}
-              </Box>
+                <Flex
+                  direction="row"
+                  alignItems="flex-end"
+                  justifyContent="flex-start"
+                >
+                  <Box
+                    borderRadius={'20px 20px 0px 20px'}
+                    mr={2}
+                    padding={2}
+                    maxWidth={200}
+                    bgColor={'#0086FF'}
+                    color="white"
+                    mt={5}
+                  >
+                    {element.messages[0]}
+                  </Box>
+
+                  <Icon as={VscAccount} boxSize={6} />
+                </Flex>
+              </Flex>
             );
           }
 
-          // return <ChatMsg messages={[...element.messages]} />;
           return (
-            <div>
-              <Box
-                borderRadius={'20px 20px 20px 0px'}
-                float={'left'}
-                padding={2}
-                maxWidth={200}
-                bgColor={chatBg}
-                color={textBg}
-                mt={5}
-                mr={'auto'}
+            <Flex
+              direction="column"
+              position="relative"
+              float="left"
+              mr="auto"
+              justifyContent="flex-start"
+              alignItems="flex-start"
+              ref={chatBoxRef}
+            >
+              <Flex
+                direction="row"
+                alignItems="flex-end"
+                justifyContent="flex-start"
               >
-                {element.messages[0]}
-              </Box>
-              {/* <p>{element.userInfo.name}</p> */}
-            </div>
+                <Icon as={VscAccount} boxSize={6} />
+                <Box
+                  borderRadius={'20px 20px 20px 0px'}
+                  ml={2}
+                  padding={2}
+                  maxWidth={200}
+                  bgColor={chatBg}
+                  color={textBg}
+                  mt={5}
+                >
+                  {element.messages[0]}
+                </Box>
+              </Flex>
+              <chakra.p>{element.userInfo.name}</chakra.p>
+            </Flex>
           );
         })}
       </Flex>
