@@ -35,3 +35,21 @@
   right: 0;
   position: fixed !important;
 }
+
+.chat-box::-webkit-scrollbar {
+  width: 2px;
+}
+.chat-box::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 2px grey;
+}
+
+/* Handle */
+.chat-box::-webkit-scrollbar-thumb {
+  background: grey;
+  /* border-radius: 10px; */
+}
+
+/* Handle on hover */
+.chat-box::-webkit-scrollbar-thumb:hover {
+  background: #009eb3;
+}
