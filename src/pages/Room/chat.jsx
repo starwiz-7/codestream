@@ -35,6 +35,11 @@ const Chat = ({ name, id }) => {
   useEffect(() => {
     if (chatBoxRef.current) chatBoxRef.current.scrollIntoView();
   }, [messageData]);
+  const handleKeyDown = event => {
+    if (event.key === 'Enter') {
+      sendMessage(event);
+    }
+  };
   const sendMessage = e => {
     e.preventDefault();
     console.log('cool');
@@ -144,6 +149,7 @@ const Chat = ({ name, id }) => {
           placeholder="Enter Message"
           value={message}
           onChange={e => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <Button onClick={sendMessage}>Send</Button>
       </Flex>
