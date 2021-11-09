@@ -5,14 +5,17 @@ import {
   useColorModeValue,
   useClipboard,
   Button,
-  Center
+  Center,
+  IconButton,
 } from '@chakra-ui/react';
 
 import { ColorModeSwitcher } from '../ColorModeSwitcher';
 import { COLORS } from '../colors';
 import LogoBlack from '../assets/logo.svg';
 import LogoWhite from '../assets/logoWhite.svg';
-export default function WithSubnavigation({ screen, slug }) {
+import { FiSettings } from 'react-icons/fi';
+
+export default function WithSubnavigation({ screen }) {
   const { hasCopied, onCopy } = useClipboard(window.location.href);
   return (
     <Box>
@@ -45,7 +48,11 @@ export default function WithSubnavigation({ screen, slug }) {
           spacing={3}
         >
           {screen !== undefined ? (
-            <Button onClick={onCopy}>{hasCopied ? 'Copied!' : 'Share'}</Button>
+            <>
+              <Button onClick={onCopy}>
+                {hasCopied ? 'Copied!' : 'Share'}
+              </Button>
+            </>
           ) : (
             <></>
           )}

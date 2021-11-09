@@ -116,7 +116,7 @@ const Home = () => {
           alt="Codestream editor"
         />
       </Box>
-      {/* <Features /> */}
+      <Features />
       {/* <Testimonial /> */}
       <Footer />
     </Box>
