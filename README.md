@@ -31,7 +31,6 @@
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
-
 <img src="https://res.cloudinary.com/hackbot/image/upload/v1634828133/Codestream/landing-page-cs_tognal.png" alt="Landing page">
 </img>
 
@@ -42,6 +41,10 @@ Codestream uses codemirror as it'c code editor. It also provides syntax highligh
 <br/>
 <img src="https://res.cloudinary.com/hackbot/image/upload/v1634828588/Codestream/code-dark_z4lw7c.png" alt="Editor">
 </img>
+
+## Design Doc
+
+Codestream Case Study - <a href="https://starwiz.notion.site/starwiz/Codestream-1d901b06f80d44a785933db23d0b60a9">Case Study</a>
 
 ### Built With
 
