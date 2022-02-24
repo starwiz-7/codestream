@@ -35,7 +35,7 @@
 </img>
 
 Codestream is a collaborative web-based code editor. It allows one to collaborate with their teammates while writing code.
-Codestream uses codemirror as it'c code editor. It also provides syntax highlighting for many languages.
+Codestream uses codemirror as it's code editor. It also provides syntax highlighting for many languages.
 <br/>
 <br/>
 <br/>
