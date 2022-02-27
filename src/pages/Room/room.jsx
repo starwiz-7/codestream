@@ -25,6 +25,7 @@ import {
   AccordionPanel,
   AccordionIcon,
 } from '@chakra-ui/react';
+import { flushSync } from 'react-dom';
 import { createLocalStorageStateHook } from 'use-local-storage-state';
 import Navbar from '../../components/navbar';
 import CompileTab from './compiler';
@@ -57,11 +58,17 @@ import { UnControlled as Editor } from 'react-codemirror2';
 import User from '../../components/user';
 import { socket } from '../../socket';
 import toast, { Toaster } from 'react-hot-toast';
+import animals from '../../animals.json';
 
 const useStorage = createLocalStorageStateHook('name');
+
+function getName() {
+  return 'Anonymous ' + animals[Math.floor(Math.random() * animals.length)];
+}
+
 export default function App() {
   const [lang, setLang] = useState('plaintext');
-  const [name, setName] = useStorage('Anonymous shark');
+  const [name, setName] = useStorage('name', getName);
   const [users, setUsers] = useState();
   const [zen, setZen] = useState(false);
   const { slug } = useParams();
@@ -72,11 +79,16 @@ export default function App() {
     setEditorInstance(editor);
   };
   const prepareData = slug => {
+    var str;
     if (name === undefined) {
-      setName('Anonymous shark');
+      flushSync(() => {
+        setName(getName());
+      });
+      str = localStorage.getItem('name');
+      str = str.replace(/^"(.*)"$/, '$1');
     }
     return {
-      name: name ? name : 'Anonymous Shark',
+      name: name ? name : str,
       color: 'green',
       roomId: slug,
       lang: lang,
@@ -211,7 +223,7 @@ export default function App() {
       </Button>
       <Drawer
         isOpen={isOpen}
-        placement="right"
+        placement="left"
         onClose={onClose}
         finalFocusRef={btnRef}
       >
