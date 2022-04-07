@@ -7,6 +7,7 @@ import {
   HStack,
   Icon,
   Select,
+  Input,
   Spacer,
   Stack,
   Text,
@@ -16,6 +17,8 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  DrawerFooter,
+  DrawerHeader,
   useDisclosure,
   Button,
   Tooltip,
@@ -34,7 +37,8 @@ import { useParams } from 'react-router-dom';
 import './room.css';
 import language from './languages.json';
 import { COLORS } from '../../colors';
-
+import axios from 'axios';
+import QuestionPane from './QuestionPane/questions';
 //Icons
 import {
   BsArrowsAngleExpand,
@@ -71,9 +75,19 @@ export default function App() {
   const [name, setName] = useStorage('name', getName);
   const [users, setUsers] = useState();
   const [zen, setZen] = useState(false);
+  const [problemLink, setProblemLink] = useState('');
   const { slug } = useParams();
-
   const [editorInstance, setEditorInstance] = React.useState(null);
+  const [questionData, setQuestionData] = React.useState('');
+  const [questionLoad, setQuestionLoad] = React.useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isQuestionOpen,
+    onOpen: onQuestionOpen,
+    onClose: onQuestionClose,
+  } = useDisclosure();
+  const btnRef = React.useRef();
+
   const handleEditorDidMount = editor => {
     window.editor = editor;
     setEditorInstance(editor);
@@ -102,13 +116,73 @@ export default function App() {
       roomId: slug,
     };
   };
+
+  const handleChangeLanguage = lang => {
+    setLang(lang);
+    socket.emit('language-changed', { lang, slug });
+  };
+
+  const handleNameChange = newName => {
+    toast.success('Name changed successfully', { duration: 5000 });
+    socket.emit('name-change', changeData(slug, newName));
+  };
+
+  const getQuestion = async () => {
+    const errorData = {
+      htmlString: 'Provide a valid URL',
+    };
+    try {
+      setQuestionLoad(true);
+
+      const url = new URL(problemLink);
+      const allowedHosts = [
+        'leetcode.com',
+        'atcoder.jp',
+        'codeforces.com',
+        'cses.fi',
+      ];
+      if (!allowedHosts.some(host => host === url.hostname)) {
+        setQuestionData(errorData);
+        socket.emit('question-data-error', errorData);
+        setQuestionLoad(false);
+        return;
+      }
+      const data = {
+        url: problemLink,
+        hostname: url.hostname,
+      };
+
+      const question = await axios({
+        method: 'POST',
+        url: `${process.env.REACT_APP_SERVER}api/get-problem`,
+        data,
+        responseType: 'json',
+      });
+
+      if (question.data.error) {
+        setQuestionData(errorData);
+        socket.emit('question-data-error', errorData);
+        setQuestionLoad(false);
+        return;
+      }
+      setQuestionData(question.data);
+      socket.emit('question-data-received', question.data);
+      setQuestionLoad(false);
+    } catch (err) {
+      setQuestionData(errorData);
+      setQuestionLoad(false);
+      socket.emit('question-data-error', errorData);
+      console.log(err);
+    }
+    setQuestionLoad(false);
+    return;
+  };
   React.useEffect(() => {
     // On joining room
     socket.emit('join-room', prepareData(slug));
 
     //When someone in the room changes the language
     socket.on('emit-language-changed', (lang, langName) => {
-      console.error('langggg-changes');
       setLang(lang);
       toast.success(`Language changed to ${langName}`, { duration: 5000 });
     });
@@ -116,7 +190,6 @@ export default function App() {
     //When someone joins the room
     socket.on('on-join', (userMap, arg, language) => {
       setUsers(userMap);
-      console.error(userMap);
       toast.success(`${arg}`, { icon: '🧑', duration: 5000 });
       setLang(language);
     });
@@ -131,18 +204,18 @@ export default function App() {
       setUsers(userMap);
       toast.error(`${user} left the room`, { duration: 5000 });
     });
+
+    socket.on('question-data-received', questionData => {
+      setQuestionData(questionData);
+      toast.success(`Question data changed`, { duration: 5000 });
+    });
+
+    socket.on('question-data-error', questionData => {
+      setQuestionData(questionData);
+      toast.error(`Error occured while fetching question`, { duration: 5000 });
+    });
   }, []);
 
-  const handleChangeLanguage = lang => {
-    setLang(lang);
-    console.error('handle-lang');
-    socket.emit('language-changed', { lang, slug });
-  };
-
-  const handleNameChange = newName => {
-    toast.success('Name changed successfully', { duration: 5000 });
-    socket.emit('name-change', changeData(slug, newName));
-  };
   React.useEffect(() => {
     if (editorInstance) {
       const ydoc = new Y.Doc(); //create a ydoc
@@ -192,9 +265,6 @@ export default function App() {
     }
   }, [editorInstance, name]);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = React.useRef();
-
   return (
     <Flex
       direction="column"
@@ -206,7 +276,35 @@ export default function App() {
       <div>
         <Toaster position="bottom-center" />
       </div>
-      <Navbar screen="room" slug={slug} />
+      {/* Question pane drawer here  */}
+      <Drawer
+        isOpen={isQuestionOpen}
+        placement="right"
+        onClose={onQuestionClose}
+        size="xl"
+      >
+        <DrawerOverlay />
+        <DrawerContent bgColor={useColorModeValue('f3f3f3', COLORS.dark)}>
+          <DrawerCloseButton />
+          <DrawerHeader>Question</DrawerHeader>
+          <DrawerBody>
+            <QuestionPane question={questionData} loading={questionLoad} />
+          </DrawerBody>
+          <DrawerFooter>
+            <Flex direction="row" width="full">
+              <Input
+                mr={2}
+                placeholder="Enter Problem link"
+                value={problemLink}
+                onChange={e => setProblemLink(e.target.value)}
+              />
+              <Button onClick={getQuestion}>Submit</Button>
+            </Flex>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
+      <Navbar screen="room" slug={slug} onQuestionOpen={onQuestionOpen} />
       <Button
         onClick={onOpen}
         display={{ base: 'block', md: 'none' }} // hide on desktop
@@ -234,7 +332,6 @@ export default function App() {
             <Container
               display={{ base: 'block', md: 'none' }} // hide on mobile
               w="xs"
-              // bgColor={darkMode ? '#252526' : '#f3f3f3'}
               bgColor={useColorModeValue('f3f3f3', COLORS.dark)}
               overflowY="auto"
               maxW="full"
@@ -282,7 +379,6 @@ export default function App() {
         <Container
           display={{ base: 'none', md: 'block' }} // hide on mobile
           w="xs"
-          // bgColor={darkMode ? '#252526' : '#f3f3f3'}
           bgColor={useColorModeValue('f3f3f3', COLORS.dark)}
           overflowY="auto"
           maxW="full"
@@ -298,7 +394,6 @@ export default function App() {
             size="sm"
             value={lang}
             onChange={event => handleChangeLanguage(event.target.value)}
-            // color="white"
           >
             {language.map(lang => (
               <option key={lang.name} value={lang.value}>
@@ -371,7 +466,6 @@ export default function App() {
               >
                 <span>
                   <Icon
-                    // py={1}
                     cursor="pointer"
                     as={zen ? BsArrowsAngleContract : BsArrowsAngleExpand}
                     fontSize="md"
@@ -426,9 +520,6 @@ export default function App() {
               </h2>
             </AccordionItem>
           </Accordion>
-          {/* <Flex direction="row">
-            <Button>Run</Button>
-          </Flex> */}
         </Flex>
       </Flex>
     </Flex>
