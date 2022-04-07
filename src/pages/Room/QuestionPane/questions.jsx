@@ -1,16 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Spinner } from '@chakra-ui/react';
+import ScrapedQuestion from './ScrapedQuestions';
+import LeetCode from './Leetcode';
 const QuestionPane = ({ question, loading }) => {
-  const [data, setData] = useState('');
+  const host = question.hostname;
 
   return (
     <div>
       {loading ? (
         <Spinner />
       ) : question !== '' ? (
-        question
+        host === 'leetcode.com' ? (
+          <LeetCode
+            question={question.htmlString}
+            name={question.questionName}
+          />
+        ) : (
+          <ScrapedQuestion hostname={host} htmlString={question.htmlString} />
+        )
       ) : (
-        <div>Nothing to show</div>
+        <div>Add a question!</div>
       )}
     </div>
   );

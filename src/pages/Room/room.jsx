@@ -119,7 +119,6 @@ export default function App() {
 
   const handleChangeLanguage = lang => {
     setLang(lang);
-    console.error('handle-lang');
     socket.emit('language-changed', { lang, slug });
   };
 
@@ -129,10 +128,25 @@ export default function App() {
   };
 
   const getQuestion = async () => {
+    const errorData = {
+      htmlString: 'Provide a valid URL',
+    };
     try {
       setQuestionLoad(true);
+
       const url = new URL(problemLink);
-      console.log(url.hostname);
+      const allowedHosts = [
+        'leetcode.com',
+        'atcoder.jp',
+        'codeforces.com',
+        'cses.fi',
+      ];
+      if (!allowedHosts.some(host => host === url.hostname)) {
+        setQuestionData(errorData);
+        socket.emit('question-data-error', errorData);
+        setQuestionLoad(false);
+        return;
+      }
       const data = {
         url: problemLink,
         hostname: url.hostname,
@@ -146,14 +160,18 @@ export default function App() {
       });
 
       if (question.data.error) {
-        console.log('NHK');
+        setQuestionData(errorData);
+        socket.emit('question-data-error', errorData);
+        setQuestionLoad(false);
         return;
       }
-
-      // console.log(question.data.htmlString);
-      setQuestionData(question.data.htmlString);
+      setQuestionData(question.data);
+      socket.emit('question-data-received', question.data);
       setQuestionLoad(false);
     } catch (err) {
+      setQuestionData(errorData);
+      setQuestionLoad(false);
+      socket.emit('question-data-error', errorData);
       console.log(err);
     }
     setQuestionLoad(false);
@@ -165,7 +183,6 @@ export default function App() {
 
     //When someone in the room changes the language
     socket.on('emit-language-changed', (lang, langName) => {
-      console.error('langggg-changes');
       setLang(lang);
       toast.success(`Language changed to ${langName}`, { duration: 5000 });
     });
@@ -173,7 +190,6 @@ export default function App() {
     //When someone joins the room
     socket.on('on-join', (userMap, arg, language) => {
       setUsers(userMap);
-      console.error(userMap);
       toast.success(`${arg}`, { icon: '🧑', duration: 5000 });
       setLang(language);
     });
@@ -187,6 +203,16 @@ export default function App() {
     socket.on('user-left', (userMap, user) => {
       setUsers(userMap);
       toast.error(`${user} left the room`, { duration: 5000 });
+    });
+
+    socket.on('question-data-received', questionData => {
+      setQuestionData(questionData);
+      toast.success(`Question data changed`, { duration: 5000 });
+    });
+
+    socket.on('question-data-error', questionData => {
+      setQuestionData(questionData);
+      toast.error(`Error occured while fetching question`, { duration: 5000 });
     });
   }, []);
 
@@ -278,7 +304,7 @@ export default function App() {
         </DrawerContent>
       </Drawer>
 
-      <Navbar screen="room" slug={slug} />
+      <Navbar screen="room" slug={slug} onQuestionOpen={onQuestionOpen} />
       <Button
         onClick={onOpen}
         display={{ base: 'block', md: 'none' }} // hide on desktop
@@ -388,7 +414,6 @@ export default function App() {
             display="block"
             maxHeight="max-content"
           >
-            <Button onClick={onQuestionOpen}>This is question wala</Button>
             <User info={{ name }} isMe onConfirm={handleNameChange} />
             {users?.map(user =>
               user.id !== socket.id ? <User info={user} /> : <></>

@@ -7,15 +7,16 @@ import {
   Button,
   Center,
   IconButton,
+  Tooltip,
 } from '@chakra-ui/react';
 
 import { ColorModeSwitcher } from '../ColorModeSwitcher';
 import { COLORS } from '../colors';
 import LogoBlack from '../assets/logo.svg';
 import LogoWhite from '../assets/logoWhite.svg';
-import { FiSettings } from 'react-icons/fi';
+import { MdOutlineNoteAdd } from 'react-icons/md';
 
-export default function WithSubnavigation({ screen }) {
+export default function WithSubnavigation({ screen, onQuestionOpen }) {
   const { hasCopied, onCopy } = useClipboard(window.location.href);
   return (
     <Box>
@@ -49,6 +50,13 @@ export default function WithSubnavigation({ screen }) {
         >
           {screen !== undefined ? (
             <>
+              <Tooltip label="Add a new Question">
+                <IconButton
+                  aria-label="Add Question Pane"
+                  onClick={onQuestionOpen}
+                  icon={<MdOutlineNoteAdd />}
+                />
+              </Tooltip>
               <Button onClick={onCopy}>
                 {hasCopied ? 'Copied!' : 'Share'}
               </Button>
