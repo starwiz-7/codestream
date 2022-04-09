@@ -31,6 +31,7 @@
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
+
 <img src="https://res.cloudinary.com/hackbot/image/upload/v1634828133/Codestream/landing-page-cs_tognal.png" alt="Landing page">
 </img>
 
@@ -52,6 +53,16 @@ Codestream Case Study - <a href="https://starwiz.notion.site/starwiz/Codestream-
 - [Chakra-UI](https://chakra-ui.com/)
 - [CodeMirror](https://codemirror.net/)
 - [Socket.io](https://socket.io/)
+
+## Features
+
+- **Collaborative** - Users can collaborate in real-time on their code
+- **Multiple Languages** - Codestream supports multiple language highlighting
+- **Compiler** - Codestream has an embedded compiler which can compile your code
+- **Chat** - Users can chat while they collaborate
+- **Zen mode** - Codestream supports zen mode for a better editing experience
+- **Responsive** - Start collaborating through your mobile
+- **Question Pane** - Add question directly in your room from supported websites(Leetcode, Codeforces, Atcoder, CSES)
 
 <!-- GETTING STARTED -->
 

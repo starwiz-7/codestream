@@ -8,7 +8,7 @@ const LeetCode = ({ question, name }) => {
     <div>
       <Box className="leetcode">
         <h1>{name}</h1>
-        {parse(question)}
+        <div>{parse(question)}</div>
       </Box>
     </div>
   );

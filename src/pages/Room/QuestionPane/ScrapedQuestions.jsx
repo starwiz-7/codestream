@@ -32,11 +32,11 @@ const ScrapedQuestion = ({ hostname, htmlString }) => {
             color: color,
           }}
         >
-          {parse(htmlString)}
+          <div>{parse(htmlString)}</div>
         </div>
       ) : (
         <div className={'atcoder'} ref={MathRef}>
-          {parse(htmlString)}
+          <div>{parse(htmlString)}</div>
         </div>
       )}
       <Divider />

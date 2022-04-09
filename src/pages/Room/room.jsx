@@ -129,7 +129,8 @@ export default function App() {
 
   const getQuestion = async () => {
     const errorData = {
-      htmlString: 'Provide a valid URL',
+      htmlString: '<div>Provide a valid URL</div>',
+      hostname: 'leetcode.com',
     };
     try {
       setQuestionLoad(true);
@@ -143,7 +144,7 @@ export default function App() {
       ];
       if (!allowedHosts.some(host => host === url.hostname)) {
         setQuestionData(errorData);
-        socket.emit('question-data-error', errorData);
+        socket.emit('question-data-received', errorData);
         setQuestionLoad(false);
         return;
       }
@@ -160,8 +161,8 @@ export default function App() {
       });
 
       if (question.data.error) {
-        setQuestionData(errorData);
-        socket.emit('question-data-error', errorData);
+        setQuestionData('');
+        socket.emit('question-data-received', errorData);
         setQuestionLoad(false);
         return;
       }
@@ -171,7 +172,7 @@ export default function App() {
     } catch (err) {
       setQuestionData(errorData);
       setQuestionLoad(false);
-      socket.emit('question-data-error', errorData);
+      socket.emit('question-data-received', errorData);
       console.log(err);
     }
     setQuestionLoad(false);
@@ -205,14 +206,12 @@ export default function App() {
       toast.error(`${user} left the room`, { duration: 5000 });
     });
 
-    socket.on('question-data-received', questionData => {
+    socket.on('emit-question-data-received', questionData => {
+      if (questionData.hostname === 'codeforces.com') {
+        onQuestionClose();
+      }
       setQuestionData(questionData);
       toast.success(`Question data changed`, { duration: 5000 });
-    });
-
-    socket.on('question-data-error', questionData => {
-      setQuestionData(questionData);
-      toast.error(`Error occured while fetching question`, { duration: 5000 });
     });
   }, []);
 
