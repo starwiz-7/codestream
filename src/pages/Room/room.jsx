@@ -102,6 +102,68 @@ export default function App() {
       roomId: slug,
     };
   };
+
+  const handleChangeLanguage = lang => {
+    setLang(lang);
+    socket.emit('language-changed', { lang, slug });
+  };
+
+  const handleNameChange = newName => {
+    toast.success('Name changed successfully', { duration: 5000 });
+    socket.emit('name-change', changeData(slug, newName));
+  };
+
+  const getQuestion = async () => {
+    const errorData = {
+      htmlString: '<div>Provide a valid URL</div>',
+      hostname: 'leetcode.com',
+    };
+    try {
+      setQuestionLoad(true);
+
+      const url = new URL(problemLink);
+      const allowedHosts = [
+        'leetcode.com',
+        'atcoder.jp',
+        'codeforces.com',
+        'cses.fi',
+      ];
+      if (!allowedHosts.some(host => host === url.hostname)) {
+        setQuestionData(errorData);
+        socket.emit('question-data-received', errorData);
+        setQuestionLoad(false);
+        return;
+      }
+      const data = {
+        url: problemLink,
+        hostname: url.hostname,
+      };
+
+      const question = await axios({
+        method: 'POST',
+        url: `${process.env.REACT_APP_SERVER}api/get-problem`,
+        data,
+        responseType: 'json',
+      });
+
+      if (question.data.error) {
+        setQuestionData('');
+        socket.emit('question-data-received', errorData);
+        setQuestionLoad(false);
+        return;
+      }
+      setQuestionData(question.data);
+      socket.emit('question-data-received', question.data);
+      setQuestionLoad(false);
+    } catch (err) {
+      setQuestionData(errorData);
+      setQuestionLoad(false);
+      socket.emit('question-data-received', errorData);
+      console.log(err);
+    }
+    setQuestionLoad(false);
+    return;
+  };
   React.useEffect(() => {
     // On joining room
     socket.emit('join-room', prepareData(slug));
@@ -130,6 +192,14 @@ export default function App() {
     socket.on('user-left', (userMap, user) => {
       setUsers(userMap);
       toast.error(`${user} left the room`, { duration: 5000 });
+    });
+
+    socket.on('emit-question-data-received', questionData => {
+      if (questionData.hostname === 'codeforces.com') {
+        onQuestionClose();
+      }
+      setQuestionData(questionData);
+      toast.success(`Question data changed`, { duration: 5000 });
     });
   }, []);
 

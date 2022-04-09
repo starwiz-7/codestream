@@ -69,7 +69,7 @@ export default function SmallWithLogoLeft() {
           </SocialButton>
           <SocialButton
             label={'Instagram'}
-            href={'#https://www.instagram.com/aryann__7/'}
+            href={'https://www.instagram.com/aryann__7/'}
           >
             <FaInstagram />
           </SocialButton>
